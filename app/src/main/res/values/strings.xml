@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Meowsic</string>
+
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="rewind">Rewind</string>
+    <string name="forward">Forward</string>
+    <string name="back">Back</string>
+    <string name="repeat_cd">Repeat</string>
+    <string name="shuffle_cd">Shuffle</string>
+    <string name="now_playing">Now playing</string>
+
+    <string name="search">Search</string>
+    <string name="search_hint">Search audio…</string>
+    <string name="open_files">Open files…</string>
+    <string name="sort">Sort by</string>
+    <string name="sort_newest">Newest first</string>
+    <string name="sort_title">Title (A–Z)</string>
+    <string name="sort_longest">Longest first</string>
+    <string name="show_system_sounds">Show ringtones and system sounds</string>
+    <string name="rescan">Rescan library</string>
+    <string name="permission_needed">Allow access to your audio files so Meowsic can list and play them.</string>
+    <string name="grant_access">Allow access</string>
+    <string name="no_audio_found">No audio files found.</string>
+    <string name="no_matches">No matches.</string>
+    <string name="error_playback">Can’t play this file</string>
+
+    <string name="loop">Loop</string>
+    <string name="loop_set_a_first">Set point A first (B must come after A)</string>
+    <string name="loop_clear">Clear loop</string>
+
+    <string name="sleep">Sleep</string>
+    <string name="sleep_timer">Sleep timer</string>
+    <string name="sleep_minutes">%1$d minutes</string>
+    <string name="sleep_end_of_track">End of this track</string>
+    <string name="sleep_off">Turn off timer</string>
+    <string name="sleep_eot_short">End of track</string>
+
+    <string name="rewind_interval">Rewind button: seconds</string>
+    <string name="forward_interval">Forward button: seconds</string>
+    <string name="seconds_fmt">%1$d seconds</string>
+
+    <string name="speed_title">Playback speed</string>
+    <string name="playback_settings">Playback settings</string>
+    <string name="range_extend">Extend range to 5×</string>
+    <string name="range_is_extended">Range: up to 5× (tap to limit to 3×)</string>
+    <string name="presets">Presets</string>
+    <string name="add_preset">Add current speed as preset</string>
+    <string name="preset_added">%1$s added to presets</string>
+    <string name="preset_exists">Already in presets</string>
+    <string name="preset_remove_q">Remove the %1$s preset?</string>
+    <string name="remove">Remove</string>
+    <string name="set_speed">Set speed (0.25 – 5.00)</string>
+
+    <string name="skip_silence">Skip silence in audio</string>
+    <string name="pitch">Pitch</string>
+    <string name="pitch_value">%1$s semitones</string>
+    <string name="reset">Reset</string>
+    <string name="volume_boost">Volume boost (this track)</string>
+    <string name="boost">Boost</string>
+    <string name="boost_value">%1$s  (%2$d%%)</string>
+    <string name="auto_level">Auto</string>
+    <string name="auto_boost_wait">Still analysing this file – try again in a moment</string>
+    <string name="auto_boost_set">Boost set to %1$s</string>
+    <string name="boost_hint">The boost uses a look-ahead limiter: peaks never clip, so quiet files get louder without distortion.</string>
+
+    <string name="wave_zoom_all">All</string>
+    <string name="wave_analyzing">Analyzing waveform… %1$d%%</string>
+    <string name="wave_unavailable">Waveform unavailable</string>
+</resources>

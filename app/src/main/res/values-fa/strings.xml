@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Meowsic</string>
+
+    <string name="play">پخش</string>
+    <string name="pause">توقف</string>
+    <string name="previous">قبلی</string>
+    <string name="next">بعدی</string>
+    <string name="rewind">عقب</string>
+    <string name="forward">جلو</string>
+    <string name="back">بازگشت</string>
+    <string name="repeat_cd">تکرار</string>
+    <string name="shuffle_cd">پخش تصادفی</string>
+    <string name="now_playing">در حال پخش</string>
+
+    <string name="search">جستجو</string>
+    <string name="search_hint">جستجوی فایل صوتی…</string>
+    <string name="open_files">باز کردن فایل…</string>
+    <string name="sort">مرتب‌سازی</string>
+    <string name="sort_newest">جدیدترین</string>
+    <string name="sort_title">نام (الف تا ی)</string>
+    <string name="sort_longest">طولانی‌ترین</string>
+    <string name="show_system_sounds">نمایش زنگ‌ها و صداهای سیستم</string>
+    <string name="rescan">اسکن دوبارهٔ حافظه</string>
+    <string name="permission_needed">برای فهرست کردن و پخش فایل‌های صوتی، دسترسی به فایل‌های صدا لازم است.</string>
+    <string name="grant_access">دادن دسترسی</string>
+    <string name="no_audio_found">فایل صوتی‌ای پیدا نشد.</string>
+    <string name="no_matches">موردی پیدا نشد.</string>
+    <string name="error_playback">این فایل پخش نمی‌شود</string>
+
+    <string name="loop">تکرار بازه</string>
+    <string name="loop_set_a_first">اول نقطهٔ A را بگذار (B باید بعد از A باشد)</string>
+    <string name="loop_clear">پاک کردن بازه</string>
+
+    <string name="sleep">خواب</string>
+    <string name="sleep_timer">تایمر خواب</string>
+    <string name="sleep_minutes">%1$d دقیقه</string>
+    <string name="sleep_end_of_track">پایان همین فایل</string>
+    <string name="sleep_off">خاموش کردن تایمر</string>
+    <string name="sleep_eot_short">پایان فایل</string>
+
+    <string name="rewind_interval">دکمهٔ عقب: چند ثانیه</string>
+    <string name="forward_interval">دکمهٔ جلو: چند ثانیه</string>
+    <string name="seconds_fmt">%1$d ثانیه</string>
+
+    <string name="speed_title">سرعت پخش</string>
+    <string name="playback_settings">تنظیمات پخش</string>
+    <string name="range_extend">افزایش محدوده تا ۵×</string>
+    <string name="range_is_extended">محدوده تا ۵× (برای برگشت به ۳× بزن)</string>
+    <string name="presets">سرعت‌های ثابت</string>
+    <string name="add_preset">افزودن سرعت فعلی به سرعت‌های ثابت</string>
+    <string name="preset_added">%1$s اضافه شد</string>
+    <string name="preset_exists">این سرعت قبلاً اضافه شده</string>
+    <string name="preset_remove_q">سرعت %1$s حذف شود؟</string>
+    <string name="remove">حذف</string>
+    <string name="set_speed">تنظیم سرعت (۰٫۲۵ تا ۵٫۰۰)</string>
+
+    <string name="skip_silence">رد شدن از سکوت‌ها</string>
+    <string name="pitch">زیر و بمی (Pitch)</string>
+    <string name="pitch_value">%1$s نیم‌پرده</string>
+    <string name="reset">بازنشانی</string>
+    <string name="volume_boost">تقویت صدا (فقط این فایل)</string>
+    <string name="boost">تقویت</string>
+    <string name="boost_value">%1$s  (%2$d%%)</string>
+    <string name="auto_level">خودکار</string>
+    <string name="auto_boost_wait">هنوز در حال تحلیل فایل است، چند لحظهٔ دیگر دوباره امتحان کن</string>
+    <string name="auto_boost_set">تقویت روی %1$s تنظیم شد</string>
+    <string name="boost_hint">تقویت صدا با یک لیمیتر کار می‌کند؛ قله‌های صدا هرگز خراب (کلیپ) نمی‌شوند و فایل‌های ضعیف بدون اعوجاج بلندتر می‌شوند.</string>
+
+    <string name="wave_zoom_all">همه</string>
+    <string name="wave_analyzing">در حال تحلیل موج صدا… %1$d%%</string>
+    <string name="wave_unavailable">موج صدا در دسترس نیست</string>
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Meowsic" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/meow_orange</item>
+        <item name="colorOnPrimary">@color/meow_on_orange</item>
+        <item name="colorPrimaryContainer">@color/meow_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/meow_on_primary_container</item>
+        <item name="colorSecondary">@color/meow_cyan</item>
+        <item name="colorOnSecondary">@color/meow_on_cyan</item>
+        <item name="colorSecondaryContainer">@color/meow_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/meow_on_secondary_container</item>
+        <item name="colorSurface">@color/meow_surface</item>
+        <item name="colorOnSurface">@color/meow_on_surface</item>
+        <item name="colorSurfaceVariant">@color/meow_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/meow_on_surface_variant</item>
+        <item name="colorOutline">@color/meow_outline</item>
+        <item name="android:colorBackground">@color/meow_surface</item>
+        <item name="colorOnBackground">@color/meow_on_surface</item>
+        <item name="android:statusBarColor">@color/meow_surface</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

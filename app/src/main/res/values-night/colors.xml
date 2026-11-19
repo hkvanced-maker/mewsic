@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="meow_primary_container">#5D3300</color>
+    <color name="meow_on_primary_container">#FFDCBF</color>
+    <color name="meow_secondary_container">#343B48</color>
+    <color name="meow_on_secondary_container">#DCE3EE</color>
+
+    <color name="meow_surface">#16181D</color>
+    <color name="meow_on_surface">#E4E6EB</color>
+    <color name="meow_surface_variant">#2A2E36</color>
+    <color name="meow_on_surface_variant">#B5BAC5</color>
+    <color name="meow_outline">#8B909C</color>
+
+    <color name="wave_rest">#7C8494</color>
+    <color name="wave_playhead">#FFFFFF</color>
+    <color name="wave_text">#D3D7E0</color>
+    <color name="wave_pill">#40FFFFFF</color>
+    <color name="wave_bg">#23272E</color>
+</resources>
