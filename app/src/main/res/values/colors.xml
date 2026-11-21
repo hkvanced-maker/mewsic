@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="meow_orange">#FF8A1F</color>
-    <color name="meow_on_orange">#2B1700</color>
-    <color name="meow_primary_container">#FFDDBA</color>
-    <color name="meow_on_primary_container">#2B1700</color>
-    <color name="meow_cyan">#4FC3F7</color>
-    <color name="meow_on_cyan">#00212F</color>
-    <color name="meow_secondary_container">#E3E6EE</color>
-    <color name="meow_on_secondary_container">#1B2430</color>
+    <color name="sovio_primary">#D42D36</color>
+    <color name="sovio_on_primary">#FFFFFF</color>
+    <color name="sovio_primary_container">#FFDAD7</color>
+    <color name="sovio_on_primary_container">#410004</color>
+    <color name="sovio_secondary">#2FB5A6</color>
+    <color name="sovio_on_secondary">#00201C</color>
+    <color name="sovio_secondary_container">#F1E9DA</color>
+    <color name="sovio_on_secondary_container">#2A241A</color>
 
-    <color name="meow_surface">#FBFBFD</color>
-    <color name="meow_on_surface">#1B1C20</color>
-    <color name="meow_surface_variant">#E3E5EB</color>
-    <color name="meow_on_surface_variant">#464A53</color>
-    <color name="meow_outline">#7A7F8A</color>
+    <color name="sovio_surface">#FFFBF8</color>
+    <color name="sovio_on_surface">#211A19</color>
+    <color name="sovio_surface_variant">#F3E6E2</color>
+    <color name="sovio_on_surface_variant">#534341</color>
+    <color name="sovio_outline">#857370</color>
 
-    <color name="ic_launcher_background">#FD8202</color>
-
-    <color name="wave_played">#FF8A1F</color>
-    <color name="wave_rest">#9AA0AC</color>
-    <color name="wave_playhead">#1C1B1F</color>
-    <color name="wave_loop">#29B6F6</color>
-    <color name="wave_loop_fill">#3329B6F6</color>
-    <color name="wave_marker_text">#00212F</color>
-    <color name="wave_text">#3B4048</color>
+    <color name="wave_played">#D42D36</color>
+    <color name="wave_rest">#B9A9A6</color>
+    <color name="wave_playhead">#211A19</color>
+    <color name="wave_loop">#2FB5A6</color>
+    <color name="wave_loop_fill">#332FB5A6</color>
+    <color name="wave_marker_text">#00201C</color>
+    <color name="wave_text">#4A3F3D</color>
     <color name="wave_pill">#26000000</color>
-    <color name="wave_bg">#ECEEF2</color>
+    <color name="wave_bg">#F4EAE6</color>
 </resources>

@@ -47,6 +47,8 @@ public final class SpeedSheet {
     private final CheckBox skipSilence;
     private final LinearLayout presetsBox;
     private final MaterialButton rangeButton;
+    private final TextView skipBackValue;
+    private final TextView skipForwardValue;
 
     private final List<MaterialButton> presetButtons = new ArrayList<>();
     private final List<Float> presetValues = new ArrayList<>();
@@ -95,6 +97,10 @@ public final class SpeedSheet {
         skipSilence = root.findViewById(R.id.skip_silence);
         presetsBox = root.findViewById(R.id.presets_box);
         rangeButton = root.findViewById(R.id.range_button);
+        skipBackValue = root.findViewById(R.id.skip_back_value);
+        skipForwardValue = root.findViewById(R.id.skip_forward_value);
+        skipBackValue.setOnClickListener(v -> SkipDialog.show(activity, true, this::onSkipChanged));
+        skipForwardValue.setOnClickListener(v -> SkipDialog.show(activity, false, this::onSkipChanged));
 
         speedValue.setOnClickListener(v -> askSpeed());
         root.findViewById(R.id.speed_minus).setOnClickListener(v -> nudge(-STEP));
@@ -183,8 +189,10 @@ public final class SpeedSheet {
         boostBar.setProgress(Math.round(db * 2f));
 
         skipSilence.setChecked(service.isSkipSilence());
+        skipBackValue.setText(activity.getString(R.string.seconds_short, Prefs.getRewindSec(activity)));
+        skipForwardValue.setText(activity.getString(R.string.seconds_short, Prefs.getForwardSec(activity)));
 
-        int orange = ContextCompat.getColor(activity, R.color.meow_orange);
+        int orange = ContextCompat.getColor(activity, R.color.sovio_primary);
         for (int i = 0; i < presetButtons.size(); i++) {
             boolean on = Math.abs(presetValues.get(i) - sp) < 0.004f;
             MaterialButton b = presetButtons.get(i);
@@ -193,6 +201,11 @@ public final class SpeedSheet {
             b.setTextColor(on ? ColorStateList.valueOf(orange) : presetText.get(i));
         }
         updating = false;
+    }
+
+    private void onSkipChanged() {
+        service.refreshSkipButtons(); // updates the lock-screen buttons and notifies listeners
+        refresh();
     }
 
     // ------------------------------------------------------------------ speed
@@ -230,7 +243,7 @@ public final class SpeedSheet {
                 .setTitle(R.string.set_speed)
                 .setView(input)
                 .setPositiveButton(android.R.string.ok, (d, w) -> {
-                    Float v = parseNumber(input.getText().toString());
+                    Float v = Fmt.parseNumber(input.getText().toString());
                     if (v != null) {
                         applySpeed(v);
                     }
@@ -239,23 +252,6 @@ public final class SpeedSheet {
                 .show();
     }
 
-    /** Accepts Latin, Persian and Arabic digits and both decimal separators. */
-    private static Float parseNumber(String s) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < s.length(); i++) {
-            char ch = s.charAt(i);
-            if (Character.isDigit(ch)) {
-                sb.append(Character.digit(ch, 10));
-            } else if (ch == '.' || ch == ',' || ch == '\u066B' || ch == '\u060C') {
-                sb.append('.');
-            }
-        }
-        try {
-            return Float.parseFloat(sb.toString());
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
 
     // ------------------------------------------------------------------ presets
 

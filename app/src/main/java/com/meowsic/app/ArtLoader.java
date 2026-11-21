@@ -21,7 +21,7 @@ final class ArtLoader {
     }
 
     private static final ExecutorService EXEC = Executors.newSingleThreadExecutor(r -> {
-        Thread t = new Thread(r, "meowsic-art");
+        Thread t = new Thread(r, "sovio-art");
         t.setDaemon(true);
         return t;
     });

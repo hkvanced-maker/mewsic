@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="meow_primary_container">#5D3300</color>
-    <color name="meow_on_primary_container">#FFDCBF</color>
-    <color name="meow_secondary_container">#343B48</color>
-    <color name="meow_on_secondary_container">#DCE3EE</color>
+    <color name="sovio_primary">#F2545B</color>
+    <color name="sovio_on_primary">#2D0003</color>
+    <color name="sovio_primary_container">#7F1D22</color>
+    <color name="sovio_on_primary_container">#FFDAD7</color>
+    <color name="sovio_secondary_container">#3A3330</color>
+    <color name="sovio_on_secondary_container">#F1E9DA</color>
 
-    <color name="meow_surface">#16181D</color>
-    <color name="meow_on_surface">#E4E6EB</color>
-    <color name="meow_surface_variant">#2A2E36</color>
-    <color name="meow_on_surface_variant">#B5BAC5</color>
-    <color name="meow_outline">#8B909C</color>
+    <color name="sovio_surface">#171314</color>
+    <color name="sovio_on_surface">#EDE0DE</color>
+    <color name="sovio_surface_variant">#2C2425</color>
+    <color name="sovio_on_surface_variant">#D8C2BF</color>
+    <color name="sovio_outline">#A08C8A</color>
 
-    <color name="wave_rest">#7C8494</color>
+    <color name="wave_played">#F2545B</color>
+    <color name="wave_rest">#84787A</color>
     <color name="wave_playhead">#FFFFFF</color>
-    <color name="wave_text">#D3D7E0</color>
+    <color name="wave_text">#E3D5D2</color>
     <color name="wave_pill">#40FFFFFF</color>
-    <color name="wave_bg">#23272E</color>
+    <color name="wave_bg">#2A2122</color>
 </resources>

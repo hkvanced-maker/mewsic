@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.audiofx.LoudnessEnhancer;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -31,9 +32,17 @@ import androidx.media3.exoplayer.audio.DefaultAudioSink;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.extractor.DefaultExtractorsFactory;
 import androidx.media3.extractor.mp3.Mp3Extractor;
+import androidx.media3.session.CommandButton;
 import androidx.media3.session.DefaultMediaNotificationProvider;
 import androidx.media3.session.MediaSession;
 import androidx.media3.session.MediaSessionService;
+import androidx.media3.session.SessionCommand;
+import androidx.media3.session.SessionCommands;
+import androidx.media3.session.SessionResult;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,12 +55,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 @OptIn(markerClass = UnstableApi.class)
 public class PlaybackService extends MediaSessionService {
-    public static final String ACTION_LOCAL = "com.meowsic.app.action.LOCAL_BIND";
+    public static final String ACTION_LOCAL = "com.sovio.app.action.LOCAL_BIND";
     public static final float MIN_SPEED = 0.25f;
     public static final float MAX_SPEED_DEFAULT = 3.0f;
     public static final float MAX_SPEED_EXTENDED = 5.0f;
     public static final float MAX_BOOST_DB = 24f;
     private static final long PROGRESS_SAVE_INTERVAL_MS = 4000;
+    private static final String CMD_SKIP_BACK = "com.sovio.app.SKIP_BACK";
+    private static final String CMD_SKIP_FORWARD = "com.sovio.app.SKIP_FORWARD";
 
     /** UI callbacks, always called on the main thread. */
     public interface Listener {
@@ -81,6 +92,11 @@ public class PlaybackService extends MediaSessionService {
     private BoostProcessor boost;
     private LoudnessEnhancer fallbackEnhancer;
     private boolean sinkWired;
+    private final SessionCommand cmdBack = new SessionCommand(CMD_SKIP_BACK, Bundle.EMPTY);
+    private final SessionCommand cmdForward = new SessionCommand(CMD_SKIP_FORWARD, Bundle.EMPTY);
+    private ImmutableList<CommandButton> customLayout = ImmutableList.of();
+    /** A restored session that the user has not started yet (errors on it stay silent). */
+    private boolean restoredIdle;
 
     private float speed = 1f;
     private float pitchSt = 0f;
@@ -119,8 +135,8 @@ public class PlaybackService extends MediaSessionService {
      * The method intentionally has no @Override: if the Media3 signature ever differs, the
      * build still works and {@link #sinkWired} stays false, which switches to a fallback.
      */
-    private final class MeowRenderersFactory extends DefaultRenderersFactory {
-        MeowRenderersFactory(Context context) {
+    private final class SovioRenderersFactory extends DefaultRenderersFactory {
+        SovioRenderersFactory(Context context) {
             super(context);
         }
 
@@ -142,7 +158,7 @@ public class PlaybackService extends MediaSessionService {
         extractors.setConstantBitrateSeekingEnabled(true);
         extractors.setMp3ExtractorFlags(Mp3Extractor.FLAG_DISABLE_ID3_METADATA);
 
-        player = new ExoPlayer.Builder(this, new MeowRenderersFactory(this))
+        player = new ExoPlayer.Builder(this, new SovioRenderersFactory(this))
                 .setMediaSourceFactory(new DefaultMediaSourceFactory(this, extractors))
                 .setAudioAttributes(new AudioAttributes.Builder()
                         .setUsage(C.USAGE_MEDIA)
@@ -171,7 +187,41 @@ public class PlaybackService extends MediaSessionService {
         Intent open = new Intent(this, PlayerActivity.class).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, open,
                 PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-        session = new MediaSession.Builder(this, player).setSessionActivity(contentIntent).build();
+        session = new MediaSession.Builder(this, player)
+                .setCallback(new SessionCallback())
+                .setSessionActivity(contentIntent)
+                .build();
+        // Without this Media3 never shows the notification / lock-screen controls and never keeps
+        // the service in the foreground (so playback dies soon after the screen turns off).
+        addSession(session);
+        refreshSkipButtons();
+        restoreLastSession();
+    }
+
+    /** Lets notification / lock-screen / headset controllers use the rewind and forward buttons. */
+    private final class SessionCallback implements MediaSession.Callback {
+        @Override
+        public MediaSession.ConnectionResult onConnect(MediaSession s, MediaSession.ControllerInfo controller) {
+            SessionCommands commands = MediaSession.ConnectionResult.DEFAULT_SESSION_COMMANDS.buildUpon()
+                    .add(cmdBack)
+                    .add(cmdForward)
+                    .build();
+            return new MediaSession.ConnectionResult.AcceptedResultBuilder(s)
+                    .setAvailableSessionCommands(commands)
+                    .setCustomLayout(customLayout)
+                    .build();
+        }
+
+        @Override
+        public ListenableFuture<SessionResult> onCustomCommand(MediaSession s, MediaSession.ControllerInfo controller,
+                                                               SessionCommand command, Bundle args) {
+            if (CMD_SKIP_BACK.equals(command.customAction)) {
+                skipBack();
+            } else if (CMD_SKIP_FORWARD.equals(command.customAction)) {
+                skipForward();
+            }
+            return Futures.immediateFuture(new SessionResult(SessionResult.RESULT_SUCCESS));
+        }
     }
 
     @Nullable
@@ -242,6 +292,9 @@ public class PlaybackService extends MediaSessionService {
                 Prefs.setResume(PlaybackService.this, currentKey, 0); // finished: start over next time
             }
             currentKey = item != null ? item.mediaId : null;
+            if (item != null) {
+                Prefs.setLastIndex(PlaybackService.this, player.getCurrentMediaItemIndex());
+            }
             clearLoop();
             applyTrackBoost();
             notifySettings();
@@ -266,6 +319,9 @@ public class PlaybackService extends MediaSessionService {
 
         @Override
         public void onPlayWhenReadyChanged(boolean playWhenReady, int reason) {
+            if (playWhenReady) {
+                restoredIdle = false;
+            }
             if (!playWhenReady && sleepEndOfTrack
                     && reason == Player.PLAY_WHEN_READY_CHANGE_REASON_END_OF_MEDIA_ITEM) {
                 cancelSleepTimer();
@@ -274,6 +330,10 @@ public class PlaybackService extends MediaSessionService {
 
         @Override
         public void onPlayerError(PlaybackException error) {
+            if (restoredIdle) {
+                discardRestored(); // the remembered file is gone: forget it quietly
+                return;
+            }
             Toast.makeText(PlaybackService.this,
                     getString(R.string.error_playback) + " (" + error.getErrorCodeName() + ")",
                     Toast.LENGTH_LONG).show();
@@ -324,6 +384,7 @@ public class PlaybackService extends MediaSessionService {
         if (tracks == null || tracks.isEmpty()) {
             return;
         }
+        restoredIdle = false;
         saveProgress();
         queue.clear();
         queue.addAll(tracks);
@@ -333,10 +394,8 @@ public class PlaybackService extends MediaSessionService {
         }
         int idx = Math.max(0, Math.min(startIndex, tracks.size() - 1));
         Track first = tracks.get(idx);
-        long startPos = Prefs.getResume(this, first.key);
-        if (startPos < 5000 || (first.durationMs > 0 && startPos > first.durationMs - 8000)) {
-            startPos = 0;
-        }
+        long startPos = resumePosition(first);
+        QueueStore.save(this, tracks, idx);
         currentKey = first.key;
         clearLoop();
         applyTrackBoost();
@@ -386,6 +445,63 @@ public class PlaybackService extends MediaSessionService {
         } else {
             player.seekTo(target);
         }
+    }
+
+    /** Rebuilds the rewind / forward buttons (lock screen, notification) after the seconds changed. */
+    public void refreshSkipButtons() {
+        CommandButton back = new CommandButton.Builder()
+                .setDisplayName(getString(R.string.skip_back_cd, Prefs.getRewindSec(this)))
+                .setSessionCommand(cmdBack)
+                .setIconResId(R.drawable.ic_notif_rewind)
+                .build();
+        CommandButton forward = new CommandButton.Builder()
+                .setDisplayName(getString(R.string.skip_forward_cd, Prefs.getForwardSec(this)))
+                .setSessionCommand(cmdForward)
+                .setIconResId(R.drawable.ic_notif_forward)
+                .build();
+        customLayout = ImmutableList.of(back, forward);
+        if (session != null) {
+            session.setCustomLayout(customLayout);
+        }
+        notifySettings();
+    }
+
+    private long resumePosition(Track t) {
+        long pos = Prefs.getResume(this, t.key);
+        if (pos < 5000 || (t.durationMs > 0 && pos > t.durationMs - 8000)) {
+            return 0;
+        }
+        return pos;
+    }
+
+    /** Loads the last played queue (paused) so the app opens on the last file, like AntennaPod. */
+    private void restoreLastSession() {
+        QueueStore.Session saved = QueueStore.load(this);
+        if (saved == null || saved.tracks.isEmpty()) {
+            return;
+        }
+        Track first = saved.tracks.get(saved.index);
+        queue.clear();
+        queue.addAll(saved.tracks);
+        List<MediaItem> items = new ArrayList<>(saved.tracks.size());
+        for (Track t : saved.tracks) {
+            items.add(toItem(t));
+        }
+        currentKey = first.key;
+        applyTrackBoost();
+        restoredIdle = true;
+        player.setMediaItems(items, saved.index, resumePosition(first));
+        player.setPlayWhenReady(false);
+        player.prepare();
+    }
+
+    private void discardRestored() {
+        restoredIdle = false;
+        QueueStore.clear(this);
+        queue.clear();
+        currentKey = null;
+        player.clearMediaItems();
+        notifySettings();
     }
 
     // ---------------------------------------------------------------- audio settings

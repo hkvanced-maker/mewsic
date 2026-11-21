@@ -68,7 +68,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.Holder> {
         h.duration.setText(t.durationMs > 0 ? Fmt.time(t.durationMs) : "");
         boolean current = t.key.equals(currentKey);
         if (current) {
-            h.title.setTextColor(ContextCompat.getColor(h.itemView.getContext(), R.color.meow_orange));
+            h.title.setTextColor(ContextCompat.getColor(h.itemView.getContext(), R.color.sovio_primary));
         } else {
             h.title.setTextColor(h.defaultTitleColors);
         }

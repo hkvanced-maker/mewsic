@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity
     private final List<Track> all = new ArrayList<>();
     private String query = "";
     private boolean askedPermission;
+    private boolean autoOpenPending;
     private final ExecutorService io = Executors.newSingleThreadExecutor();
     private final Handler ui = new Handler(Looper.getMainLooper());
 
@@ -83,6 +84,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        autoOpenPending = savedInstanceState == null
+                && Intent.ACTION_MAIN.equals(getIntent().getAction());
 
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.menu_main);
@@ -155,6 +158,12 @@ public class MainActivity extends AppCompatActivity
         service = s;
         s.getPlayer().addListener(playerListener);
         refreshMini();
+        if (autoOpenPending) {
+            autoOpenPending = false;
+            if (Prefs.getOpenPlayerOnLaunch(this) && s.getCurrentTrack() != null) {
+                openPlayer();
+            }
+        }
         ui.removeCallbacks(tick);
         ui.postDelayed(tick, 500);
     }
@@ -214,6 +223,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
         menu.findItem(R.id.action_system_sounds).setChecked(Prefs.getShowSystemSounds(this));
+        menu.findItem(R.id.action_open_last).setChecked(Prefs.getOpenPlayerOnLaunch(this));
         int sort = Prefs.getSort(this);
         int checkId = sort == Library.SORT_TITLE ? R.id.sort_title
                 : sort == Library.SORT_LONGEST ? R.id.sort_longest : R.id.sort_newest;
@@ -233,6 +243,11 @@ public class MainActivity extends AppCompatActivity
             item.setChecked(v);
             Prefs.setShowSystemSounds(this, v);
             loadLibrary();
+            return true;
+        } else if (id == R.id.action_open_last) {
+            boolean v = !item.isChecked();
+            item.setChecked(v);
+            Prefs.setOpenPlayerOnLaunch(this, v);
             return true;
         } else if (id == R.id.sort_newest || id == R.id.sort_title || id == R.id.sort_longest) {
             item.setChecked(true);

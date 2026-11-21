@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Meowsic</string>
+    <string name="app_name">Sovio ☭</string>
 
     <string name="play">Play</string>
     <string name="pause">Pause</string>
@@ -22,7 +22,7 @@
     <string name="sort_longest">Longest first</string>
     <string name="show_system_sounds">Show ringtones and system sounds</string>
     <string name="rescan">Rescan library</string>
-    <string name="permission_needed">Allow access to your audio files so Meowsic can list and play them.</string>
+    <string name="permission_needed">Allow access to your audio files so Sovio can list and play them.</string>
     <string name="grant_access">Allow access</string>
     <string name="no_audio_found">No audio files found.</string>
     <string name="no_matches">No matches.</string>
@@ -41,7 +41,6 @@
 
     <string name="rewind_interval">Rewind button: seconds</string>
     <string name="forward_interval">Forward button: seconds</string>
-    <string name="seconds_fmt">%1$d seconds</string>
 
     <string name="speed_title">Playback speed</string>
     <string name="playback_settings">Playback settings</string>
@@ -70,4 +69,15 @@
     <string name="wave_zoom_all">All</string>
     <string name="wave_analyzing">Analyzing waveform… %1$d%%</string>
     <string name="wave_unavailable">Waveform unavailable</string>
+    <string name="skip_back_cd">Rewind %1$d s</string>
+    <string name="skip_forward_cd">Forward %1$d s</string>
+    <string name="skip_buttons">Rewind / forward buttons</string>
+    <string name="skip_range_hint">Any value from 1 to 7200 seconds.</string>
+    <string name="skip_invalid">Enter a number from 1 to 7200.</string>
+    <string name="seconds_short">%1$d s</string>
+    <string name="open_last_on_start">Open the player on start</string>
+    <string name="notif_title">Lock-screen controls are off</string>
+    <string name="notif_message">Notifications are turned off for this app, so the lock screen and the notification shade can’t show play/pause and rewind/forward buttons. Turn them on?</string>
+    <string name="notif_open_settings">Open settings</string>
+    <string name="notif_later">Not now</string>
 </resources>

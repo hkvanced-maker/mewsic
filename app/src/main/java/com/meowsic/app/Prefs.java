@@ -17,12 +17,12 @@ public final class Prefs {
     }
 
     private static SharedPreferences sp(Context c) {
-        return c.getApplicationContext().getSharedPreferences("meowsic", Context.MODE_PRIVATE);
+        return c.getApplicationContext().getSharedPreferences("sovio", Context.MODE_PRIVATE);
     }
 
     /** Per-track data (resume position, boost). */
     private static SharedPreferences tracks(Context c) {
-        return c.getApplicationContext().getSharedPreferences("meowsic_tracks", Context.MODE_PRIVATE);
+        return c.getApplicationContext().getSharedPreferences("sovio_tracks", Context.MODE_PRIVATE);
     }
 
     public static float getSpeed(Context c) {
@@ -105,6 +105,32 @@ public final class Prefs {
 
     public static void setShuffle(Context c, boolean v) {
         sp(c).edit().putBoolean("shuffle", v).apply();
+    }
+
+    /** Index (in the saved queue) of the file that was playing last. */
+    public static int getLastIndex(Context c) {
+        return sp(c).getInt("last_index", 0);
+    }
+
+    public static void setLastIndex(Context c, int v) {
+        sp(c).edit().putInt("last_index", v).apply();
+    }
+
+    /** Open the full player automatically when the app is started from the launcher. */
+    public static boolean getOpenPlayerOnLaunch(Context c) {
+        return sp(c).getBoolean("open_player_launch", false);
+    }
+
+    public static void setOpenPlayerOnLaunch(Context c, boolean v) {
+        sp(c).edit().putBoolean("open_player_launch", v).apply();
+    }
+
+    public static boolean isNotifPrompted(Context c) {
+        return sp(c).getBoolean("notif_prompted", false);
+    }
+
+    public static void setNotifPrompted(Context c, boolean v) {
+        sp(c).edit().putBoolean("notif_prompted", v).apply();
     }
 
     public static List<Float> getPresets(Context c) {

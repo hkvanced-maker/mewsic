@@ -3,10 +3,12 @@ package com.meowsic.app;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.media3.common.C;
 import androidx.media3.common.Player;
@@ -130,7 +133,7 @@ public class PlayerActivity extends AppCompatActivity
         loopBButton = findViewById(R.id.loop_b);
 
         waveform.setHost(this);
-        art.setImageResource(R.drawable.logo_cat);
+        art.setImageResource(R.drawable.app_logo);
 
         findViewById(R.id.back_button).setOnClickListener(v -> finish());
         findViewById(R.id.settings_button).setOnClickListener(v -> openSheet());
@@ -156,7 +159,7 @@ public class PlayerActivity extends AppCompatActivity
             }
         });
         rewind.setOnLongClickListener(v -> {
-            pickSkip(true);
+            SkipDialog.show(this, true, this::onSkipChanged);
             return true;
         });
         View forward = findViewById(R.id.btn_forward);
@@ -166,7 +169,7 @@ public class PlayerActivity extends AppCompatActivity
             }
         });
         forward.setOnLongClickListener(v -> {
-            pickSkip(false);
+            SkipDialog.show(this, false, this::onSkipChanged);
             return true;
         });
         repeatButton.setOnClickListener(v -> cycleRepeat());
@@ -295,6 +298,7 @@ public class PlayerActivity extends AppCompatActivity
         updateLoopButtons();
         ui.removeCallbacks(tick);
         ui.post(tick);
+        maybePromptNotifications();
     }
 
     @Override
@@ -387,7 +391,7 @@ public class PlayerActivity extends AppCompatActivity
         }
         subtitleView.setText(sub);
         subtitleView.setVisibility(sub.isEmpty() ? View.GONE : View.VISIBLE);
-        art.setImageResource(R.drawable.logo_cat);
+        art.setImageResource(R.drawable.app_logo);
         waveform.setData(WaveformStore.get(this, t));
         ArtLoader.load(this, t, 700, (key, bitmap) -> {
             if (bitmap != null && key.equals(boundKey) && !isFinishing() && !isDestroyed()) {
@@ -421,7 +425,7 @@ public class PlayerActivity extends AppCompatActivity
 
     private void tint(ImageButton button, boolean on) {
         if (on) {
-            button.setColorFilter(ContextCompat.getColor(this, R.color.meow_orange));
+            button.setColorFilter(ContextCompat.getColor(this, R.color.sovio_primary));
             button.setAlpha(1f);
         } else {
             button.clearColorFilter();
@@ -436,6 +440,7 @@ public class PlayerActivity extends AppCompatActivity
         speedButton.setText(Fmt.speed(service.getSpeed()));
         float db = service.getBoostDb();
         boostButton.setText(db > 0f ? Fmt.db(db) : getString(R.string.boost));
+        refreshLabels();
         refreshProgress();
     }
 
@@ -555,22 +560,35 @@ public class PlayerActivity extends AppCompatActivity
                 .show();
     }
 
-    private void pickSkip(final boolean back) {
-        final int[] options = {5, 10, 15, 20, 30, 45, 60, 90, 120};
-        CharSequence[] labels = new CharSequence[options.length];
-        for (int i = 0; i < options.length; i++) {
-            labels[i] = getString(R.string.seconds_fmt, options[i]);
+    private void onSkipChanged() {
+        if (service != null) {
+            service.refreshSkipButtons(); // lock screen / notification buttons follow the new seconds
         }
+        refreshLabels();
+    }
+
+    /** Without notifications Android cannot show the lock-screen / notification-shade controls. */
+    private void maybePromptNotifications() {
+        if (Prefs.isNotifPrompted(this)
+                || NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+            return;
+        }
+        Prefs.setNotifPrompted(this, true);
         new MaterialAlertDialogBuilder(this)
-                .setTitle(back ? R.string.rewind_interval : R.string.forward_interval)
-                .setItems(labels, (dialog, which) -> {
-                    if (back) {
-                        Prefs.setRewindSec(this, options[which]);
+                .setTitle(R.string.notif_title)
+                .setMessage(R.string.notif_message)
+                .setPositiveButton(R.string.notif_open_settings, (dialog, which) -> {
+                    Intent settings;
+                    if (Build.VERSION.SDK_INT >= 26) {
+                        settings = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                                .putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
                     } else {
-                        Prefs.setForwardSec(this, options[which]);
+                        settings = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                Uri.fromParts("package", getPackageName(), null));
                     }
-                    refreshLabels();
+                    startActivity(settings);
                 })
+                .setNegativeButton(R.string.notif_later, null)
                 .show();
     }
 }

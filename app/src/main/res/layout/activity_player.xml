@@ -248,7 +248,7 @@
             android:background="@drawable/bg_play_button"
             android:contentDescription="@string/play"
             android:src="@drawable/ic_play"
-            android:tint="@color/meow_on_orange" />
+            android:tint="@color/sovio_on_primary" />
 
         <LinearLayout
             android:id="@+id/btn_forward"

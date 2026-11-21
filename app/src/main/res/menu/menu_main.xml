@@ -41,6 +41,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_open_last"
+        android:checkable="true"
+        android:title="@string/open_last_on_start"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_rescan"
         android:title="@string/rescan"
         app:showAsAction="never" />

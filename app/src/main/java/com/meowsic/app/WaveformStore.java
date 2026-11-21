@@ -15,7 +15,7 @@ final class WaveformStore {
     private static final int MAX_MEMORY_ENTRIES = 4;
     private static final Map<String, WaveformData> MEM = new LinkedHashMap<>();
     private static final ExecutorService EXEC = Executors.newSingleThreadExecutor(r -> {
-        Thread t = new Thread(r, "meowsic-waveform");
+        Thread t = new Thread(r, "sovio-waveform");
         t.setDaemon(true);
         return t;
     });

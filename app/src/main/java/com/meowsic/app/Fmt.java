@@ -53,6 +53,24 @@ public final class Fmt {
         return (float) Math.pow(10.0, db / 20.0);
     }
 
+    /** Parses a number typed with Latin, Persian or Arabic digits; null if there is none. */
+    public static Float parseNumber(String s) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (Character.isDigit(ch)) {
+                sb.append(Character.digit(ch, 10));
+            } else if (ch == '.' || ch == ',' || ch == '\u066B' || ch == '\u060C') {
+                sb.append('.');
+            }
+        }
+        try {
+            return Float.parseFloat(sb.toString());
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
     public static int boostPercent(float db) {
         return Math.round(dbToGain(db) * 100f);
     }
